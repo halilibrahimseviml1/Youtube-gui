@@ -1,41 +1,182 @@
 local HttpService = game:GetService("HttpService")
 local HttpRequest = syn and syn.request or http_request or request
+local TweenService = game:GetService("TweenService")
 
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local TextBox = Instance.new("TextBox")
-local PlayButton = Instance.new("TextButton")
-local StatusLabel = Instance.new("TextLabel")
-
 ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "AdvancedYouTubeGui"
+
+-- Açılış Logosu / Intro Yazısı (PREPARED BY halilibrahimseviml1)
+local IntroFrame = Instance.new("Frame")
+IntroFrame.Parent = ScreenGui
+IntroFrame.Size = UDim2.new(1, 0, 1, 0)
+IntroFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+IntroFrame.BackgroundTransparency = 0
+IntroFrame.ZIndex = 10
+
+local IntroText = Instance.new("TextLabel")
+IntroText.Parent = IntroFrame
+IntroText.Size = UDim2.new(1, 0, 0, 60)
+IntroText.Position = UDim2.new(0, 0, 0.5, -30)
+IntroText.BackgroundTransparency = 1
+IntroText.Text = "PREPARED BY halilibrahimseviml1"
+IntroText.TextColor3 = Color3.fromRGB(255, 255, 255)
+IntroText.TextSize = 24
+IntroText.Font = Enum.Font.GothamBold
+IntroText.ZIndex = 11
+
+-- Intro Efekti (2 saniye gösterip yok etme)
+task.spawn(function()
+	task.wait(1.5) -- Yazının ekranda kalma süresi
+	
+	local tweenInfo = TweenInfo.new(0.8, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	
+	local textTween = TweenService:Create(IntroText, tweenInfo, {TextTransparency = 1})
+	local frameTween = TweenService:Create(IntroFrame, tweenInfo, {BackgroundTransparency = 1})
+	
+	textTween:Play()
+	frameTween:Play()
+	
+	task.wait(0.8)
+	IntroFrame:Destroy()
+end)
+
+-- Ana Pencere
+local MainFrame = Instance.new("Frame")
 MainFrame.Parent = ScreenGui
-MainFrame.Size = UDim2.new(0, 320, 0, 160)
-MainFrame.Position = UDim2.new(0.5, -160, 0.5, -80)
-MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+MainFrame.Size = UDim2.new(0, 480, 0, 260)
+MainFrame.Position = UDim2.new(0.5, -240, 0.5, -130)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Draggable = true
 
-TextBox.Parent = MainFrame
-TextBox.Size = UDim2.new(0.85, 0, 0, 35)
-TextBox.Position = UDim2.new(0.075, 0, 0.2, 0)
-TextBox.PlaceholderText = "Paste YouTube Link..."
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+-- Sol Sidebar (Yan Menü Barı)
+local Sidebar = Instance.new("Frame")
+Sidebar.Parent = MainFrame
+Sidebar.Size = UDim2.new(0, 70, 1, 0)
+Sidebar.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+Sidebar.BorderSizePixel = 0
+
+local SidebarCorner = Instance.new("UICorner")
+SidebarCorner.CornerRadius = UDim.new(0, 10)
+SidebarCorner.Parent = Sidebar
+
+local SideFix = Instance.new("Frame")
+SideFix.Parent = Sidebar
+SideFix.Size = UDim2.new(0, 10, 1, 0)
+SideFix.Position = UDim2.new(1, -10, 0, 0)
+SideFix.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
+SideFix.BorderSizePixel = 0
+
+-- Sidebar Üst: YouTube Logosu Butonu
+local LogoButton = Instance.new("ImageButton")
+LogoButton.Parent = Sidebar
+LogoButton.Size = UDim2.new(0, 45, 0, 45)
+LogoButton.Position = UDim2.new(0.5, -22, 0, 15)
+LogoButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+LogoButton.BorderSizePixel = 0
+LogoButton.AutoButtonColor = false
+
+local LogoBtnCorner = Instance.new("UICorner")
+LogoBtnCorner.CornerRadius = UDim.new(0, 8)
+LogoBtnCorner.Parent = LogoButton
+
+local LogoText = Instance.new("TextLabel")
+LogoText.Parent = LogoButton
+LogoText.Size = UDim2.new(1, 0, 1, 0)
+LogoText.BackgroundTransparency = 1
+LogoText.Text = "▶"
+LogoText.TextColor3 = Color3.fromRGB(255, 0, 0)
+LogoText.TextSize = 20
+LogoText.Font = Enum.Font.GothamBold
+
+-- Sidebar Alt: Global Chat Butonu 💬
+local ChatButton = Instance.new("TextButton")
+ChatButton.Parent = Sidebar
+ChatButton.Size = UDim2.new(0, 45, 0, 45)
+ChatButton.Position = UDim2.new(0.5, -22, 0, 75)
+ChatButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+ChatButton.BorderSizePixel = 0
+ChatButton.Text = "💬"
+ChatButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ChatButton.TextSize = 20
+ChatButton.AutoButtonColor = false
+
+local ChatBtnCorner = Instance.new("UICorner")
+ChatBtnCorner.CornerRadius = UDim.new(0, 8)
+ChatBtnCorner.Parent = ChatButton
+
+ChatButton.MouseButton1Click:Connect(function()
+	pcall(function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/halilibrahimseviml1/Global-chat/refs/heads/main/Global-chat"))()
+	end)
+end)
+
+-- Sağ Taraf (İçerik Alanı)
+local ContentArea = Instance.new("Frame")
+ContentArea.Parent = MainFrame
+ContentArea.Size = UDim2.new(1, -70, 1, 0)
+ContentArea.Position = UDim2.new(0, 70, 0, 0)
+ContentArea.BackgroundTransparency = 1
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Parent = ContentArea
+TitleLabel.Size = UDim2.new(1, -20, 0, 40)
+TitleLabel.Position = UDim2.new(0, 15, 0, 10)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "YouTube Media Streamer"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 18
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = ContentArea
+TextBox.Size = UDim2.new(0.9, 0, 0, 45)
+TextBox.Position = UDim2.new(0, 15, 0, 65)
+TextBox.PlaceholderText = "https://www.youtube.com/watch?v=..."
 TextBox.Text = ""
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.PlaceholderColor3 = Color3.fromRGB(130, 130, 130)
+TextBox.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+TextBox.BorderSizePixel = 0
+TextBox.TextSize = 14
+TextBox.Font = Enum.Font.Gotham
 
-PlayButton.Parent = MainFrame
-PlayButton.Size = UDim2.new(0.85, 0, 0, 35)
-PlayButton.Position = UDim2.new(0.075, 0, 0.55, 0)
+local BoxCorner = Instance.new("UICorner")
+BoxCorner.CornerRadius = UDim.new(0, 6)
+BoxCorner.Parent = TextBox
+
+local PlayButton = Instance.new("TextButton")
+PlayButton.Parent = ContentArea
+PlayButton.Size = UDim2.new(0.9, 0, 0, 45)
+PlayButton.Position = UDim2.new(0, 15, 0, 125)
 PlayButton.Text = "PLAY"
 PlayButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-PlayButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+PlayButton.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
+PlayButton.BorderSizePixel = 0
+PlayButton.TextSize = 15
+PlayButton.Font = Enum.Font.GothamBold
 
-StatusLabel.Parent = MainFrame
-StatusLabel.Size = UDim2.new(0.85, 0, 0, 20)
-StatusLabel.Position = UDim2.new(0.075, 0, 0.8, 0)
+local BtnCorner = Instance.new("UICorner")
+BtnCorner.CornerRadius = UDim.new(0, 6)
+BtnCorner.Parent = PlayButton
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Parent = ContentArea
+StatusLabel.Size = UDim2.new(0.9, 0, 0, 20)
+StatusLabel.Position = UDim2.new(0, 15, 0, 185)
 StatusLabel.Text = "Status: Ready"
-StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
 StatusLabel.BackgroundTransparency = 1
+StatusLabel.TextSize = 13
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local currentSound = nil
 
