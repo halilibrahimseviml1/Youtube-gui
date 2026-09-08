@@ -1,0 +1,88 @@
+local HttpService = game:GetService("HttpService")
+local HttpRequest = syn and syn.request or http_request or request
+
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local PlayButton = Instance.new("TextButton")
+local StatusLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.CoreGui
+MainFrame.Parent = ScreenGui
+MainFrame.Size = UDim2.new(0, 320, 0, 160)
+MainFrame.Position = UDim2.new(0.5, -160, 0.5, -80)
+MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+TextBox.Parent = MainFrame
+TextBox.Size = UDim2.new(0.85, 0, 0, 35)
+TextBox.Position = UDim2.new(0.075, 0, 0.2, 0)
+TextBox.PlaceholderText = "Paste YouTube Link..."
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+
+PlayButton.Parent = MainFrame
+PlayButton.Size = UDim2.new(0.85, 0, 0, 35)
+PlayButton.Position = UDim2.new(0.075, 0, 0.55, 0)
+PlayButton.Text = "PLAY"
+PlayButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+
+StatusLabel.Parent = MainFrame
+StatusLabel.Size = UDim2.new(0.85, 0, 0, 20)
+StatusLabel.Position = UDim2.new(0.075, 0, 0.8, 0)
+StatusLabel.Text = "Status: Ready"
+StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+StatusLabel.BackgroundTransparency = 1
+
+local currentSound = nil
+
+PlayButton.MouseButton1Click:Connect(function()
+	local ytUrl = TextBox.Text
+	if ytUrl == "" then 
+		StatusLabel.Text = "Error: Link cannot be empty!"
+		return 
+	end
+
+	StatusLabel.Text = "Connecting to server..."
+
+	local success, response = pcall(function()
+		return HttpRequest({
+			Url = "https://youtube-1-fksr.onrender.com/play",
+			Method = "POST",
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = HttpService:JSONEncode({
+				url = ytUrl
+			})
+		})
+	end)
+
+	if success and response and response.StatusCode == 200 then
+		local data = HttpService:JSONDecode(response.Body)
+		if data.streamUrl then
+			StatusLabel.Text = "Playing..."
+			
+			if currentSound then 
+				currentSound:Destroy() 
+			end
+
+			currentSound = Instance.new("Sound")
+			currentSound.SoundId = data.streamUrl
+			currentSound.Volume = 1
+			currentSound.Parent = game.Workspace
+			currentSound:Play()
+			
+			currentSound.Ended:Connect(function()
+				StatusLabel.Text = "Finished."
+			end)
+		else
+			StatusLabel.Text = "Error: Stream link not found."
+		end
+	else
+		StatusLabel.Text = "Server error!"
+	end
+end)
