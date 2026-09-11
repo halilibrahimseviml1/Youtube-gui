@@ -1,156 +1,236 @@
--- ============================================
---         LIGHTNING MP3 / AUDIO PLAYER
---         prepared by halilibrahimseviml1
--- ============================================
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UIStroke = Instance.new("UIStroke")
+local Title = Instance.new("TextLabel")
+local SubTitle = Instance.new("TextLabel")
+local KeyBox = Instance.new("TextBox")
+local CheckButton = Instance.new("TextButton")
+local GetKeyButton = Instance.new("TextButton")
 
-local Players = game:GetService("Players")
-local localPlayer = Players.LocalPlayer
-local coreGui = game:GetService("CoreGui")
+ScreenGui.Parent = game.CoreGui
 
-local guiParent = (gethui and gethui()) or (pcall(function() return coreGui:IsA("CoreGui") end) and coreGui) or localPlayer:WaitForChild("PlayerGui")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -110)
+MainFrame.Size = UDim2.new(0, 300, 0, 220)
+MainFrame.Active = true
+MainFrame.Draggable = true
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
 
-if guiParent:FindFirstChild("MP3PlayerGui") then
-    guiParent.MP3PlayerGui:Destroy()
-end
+UIStroke.Parent = MainFrame
+UIStroke.Color = Color3.fromRGB(204, 0, 0)
+UIStroke.Thickness = 2
 
--- ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "MP3PlayerGui"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = guiParent
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 0, 0, 10)
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Font = Enum.Font.SourceSansBold
+Title.Text = "Lightning MP3 Key system"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16
 
--- Main Frame (YouTube Style)
-local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 320, 0, 230)
-mainFrame.Position = UDim2.new(0.5, -160, 0.4, -115)
-mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
-mainFrame.BorderSizePixel = 0
-mainFrame.Active = true
-mainFrame.Draggable = true
-mainFrame.Parent = screenGui
+SubTitle.Name = "SubTitle"
+SubTitle.Parent = MainFrame
+SubTitle.BackgroundTransparency = 1
+SubTitle.Position = UDim2.new(0, 0, 0, 40)
+SubTitle.Size = UDim2.new(1, 0, 0, 20)
+SubTitle.Font = Enum.Font.SourceSans
+SubTitle.Text = "Join our Discord server and get the key"
+SubTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
+SubTitle.TextSize = 12
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 8)
-corner.Parent = mainFrame
+KeyBox.Name = "KeyBox"
+KeyBox.Parent = MainFrame
+KeyBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+KeyBox.Position = UDim2.new(0.1, 0, 0, 75)
+KeyBox.Size = UDim2.new(0.8, 0, 0, 32)
+KeyBox.Font = Enum.Font.SourceSans
+KeyBox.PlaceholderText = "Enter Key..."
+KeyBox.Text = ""
+KeyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyBox.TextSize = 14
+Instance.new("UICorner", KeyBox).CornerRadius = UDim.new(0, 6)
 
--- Top Bar
-local topBar = Instance.new("Frame")
-topBar.Size = UDim2.new(1, 0, 0, 35)
-topBar.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
-topBar.Parent = mainFrame
+CheckButton.Name = "CheckButton"
+CheckButton.Parent = MainFrame
+CheckButton.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
+CheckButton.Position = UDim2.new(0.1, 0, 0, 120)
+CheckButton.Size = UDim2.new(0.8, 0, 0, 32)
+CheckButton.Font = Enum.Font.SourceSansBold
+CheckButton.Text = "Check Key"
+CheckButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckButton.TextSize = 14
+Instance.new("UICorner", CheckButton).CornerRadius = UDim.new(0, 6)
 
-local title = Instance.new("TextLabel")
-title.Text = " YouTube MP3 Player"
-title.Size = UDim2.new(1, -40, 1, 0)
-title.Position = UDim2.new(0, 10, 0, 0)
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.Font = Enum.Font.SourceSansBold
-title.TextSize = 15
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.BackgroundTransparency = 1
-title.Parent = topBar
+GetKeyButton.Name = "GetKeyButton"
+GetKeyButton.Parent = MainFrame
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+GetKeyButton.Position = UDim2.new(0.1, 0, 0, 162)
+GetKeyButton.Size = UDim2.new(0.8, 0, 0, 32)
+GetKeyButton.Font = Enum.Font.SourceSansBold
+GetKeyButton.Text = "Get Key"
+GetKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyButton.TextSize = 14
+Instance.new("UICorner", GetKeyButton).CornerRadius = UDim.new(0, 6)
 
-local closeBtn = Instance.new("TextButton")
-closeBtn.Size = UDim2.new(0, 25, 0, 25)
-closeBtn.Position = UDim2.new(1, -30, 0, 5)
-closeBtn.Text = "X"
-closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-closeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-closeBtn.Font = Enum.Font.SourceSansBold
-closeBtn.Parent = topBar
-closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
-
--- Sound Object
-local sound = Instance.new("Sound")
-sound.Name = "PlayerAudio"
-sound.Volume = 1
-sound.Parent = mainFrame
-
--- Controls
-local inputBar = Instance.new("TextBox")
-inputBar.Size = UDim2.new(0.9, 0, 0, 32)
-inputBar.Position = UDim2.new(0.05, 0, 0, 45)
-inputBar.PlaceholderText = "Enter Audio ID (e.g. 1837879082)"
-inputBar.Text = ""
-inputBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-inputBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-inputBar.Font = Enum.Font.SourceSans
-inputBar.TextSize = 12
-inputBar.Parent = mainFrame
-
-local playBtn = Instance.new("TextButton")
-playBtn.Size = UDim2.new(0.42, 0, 0, 32)
-playBtn.Position = UDim2.new(0.05, 0, 0, 85)
-playBtn.Text = "Play"
-playBtn.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
-playBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-playBtn.Font = Enum.Font.SourceSansBold
-playBtn.Parent = mainFrame
-
-local stopBtn = Instance.new("TextButton")
-stopBtn.Size = UDim2.new(0.42, 0, 0, 32)
-stopBtn.Position = UDim2.new(0.53, 0, 0, 85)
-stopBtn.Text = "Stop"
-stopBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-stopBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-stopBtn.Font = Enum.Font.SourceSansBold
-stopBtn.Parent = mainFrame
-
--- Chat Button Section
-local chatBtn = Instance.new("TextButton")
-chatBtn.Size = UDim2.new(0.9, 0, 0, 32)
-chatBtn.Position = UDim2.new(0.05, 0, 0, 125)
-chatBtn.Text = "Open Custom Chat"
-chatBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-chatBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-chatBtn.Font = Enum.Font.SourceSansBold
-chatBtn.Parent = mainFrame
-
-local statusLabel = Instance.new("TextLabel")
-statusLabel.Size = UDim2.new(0.9, 0, 0, 25)
-statusLabel.Position = UDim2.new(0.05, 0, 0, 190)
-statusLabel.Text = "Status: Ready"
-statusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
-statusLabel.BackgroundTransparency = 1
-statusLabel.TextSize = 11
-statusLabel.Parent = mainFrame
-
--- Events
-playBtn.MouseButton1Click:Connect(function()
-    local id = inputBar.Text:match("%d+")
-    if id then
-        sound:Stop()
-        sound.SoundId = "rbxassetid://" .. id
-        sound:Play()
-        statusLabel.Text = "Playing ID: " .. id
-        statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-    else
-        statusLabel.Text = "Error: Invalid Audio ID!"
-        statusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
-    end
+GetKeyButton.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/senindiscordlinkin")
 end)
 
-stopBtn.MouseButton1Click:Connect(function()
-    sound:Stop()
-    statusLabel.Text = "Stopped."
-    statusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-end)
+CheckButton.MouseButton1Click:Connect(function()
+    if KeyBox.Text == "halilibrahimseviml1" then
+        ScreenGui:Destroy()
 
-chatBtn.MouseButton1Click:Connect(function()
-    statusLabel.Text = "Loading Chat Script..."
-    statusLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
-    
-    task.spawn(function()
-        local success, err = pcall(function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/halilibrahimseviml1/ChatNoAgeVerification/refs/heads/main/NoAgeVerification"))()
-        end)
-        
-        if success then
-            statusLabel.Text = "Chat Script Loaded!"
-            statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-        else
-            statusLabel.Text = "Error loading Chat Script!"
-            statusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+        local Players = game:GetService("Players")
+        local localPlayer = Players.LocalPlayer
+        local coreGui = game:GetService("CoreGui")
+
+        local guiParent = (gethui and gethui()) or (pcall(function() return coreGui:IsA("CoreGui") end) and coreGui) or localPlayer:WaitForChild("PlayerGui")
+
+        if guiParent:FindFirstChild("MP3PlayerGui") then
+            guiParent.MP3PlayerGui:Destroy()
         end
-    end)
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "MP3PlayerGui"
+        screenGui.ResetOnSpawn = false
+        screenGui.Parent = guiParent
+
+        local mainFrame = Instance.new("Frame")
+        mainFrame.Size = UDim2.new(0, 320, 0, 230)
+        mainFrame.Position = UDim2.new(0.5, -160, 0.4, -115)
+        mainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+        mainFrame.BorderSizePixel = 0
+        mainFrame.Active = true
+        mainFrame.Draggable = true
+        mainFrame.Parent = screenGui
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = mainFrame
+
+        local topBar = Instance.new("Frame")
+        topBar.Size = UDim2.new(1, 0, 0, 35)
+        topBar.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
+        topBar.Parent = mainFrame
+
+        local title = Instance.new("TextLabel")
+        title.Text = " YouTube MP3 Player"
+        title.Size = UDim2.new(1, -40, 1, 0)
+        title.Position = UDim2.new(0, 10, 0, 0)
+        title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        title.Font = Enum.Font.SourceSansBold
+        title.TextSize = 15
+        title.TextXAlignment = Enum.TextXAlignment.Left
+        title.BackgroundTransparency = 1
+        title.Parent = topBar
+
+        local closeBtn = Instance.new("TextButton")
+        closeBtn.Size = UDim2.new(0, 25, 0, 25)
+        closeBtn.Position = UDim2.new(1, -30, 0, 5)
+        closeBtn.Text = "X"
+        closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        closeBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        closeBtn.Font = Enum.Font.SourceSansBold
+        closeBtn.Parent = topBar
+        closeBtn.MouseButton1Click:Connect(function() screenGui:Destroy() end)
+
+        local sound = Instance.new("Sound")
+        sound.Name = "PlayerAudio"
+        sound.Volume = 1
+        sound.Parent = mainFrame
+
+        local inputBar = Instance.new("TextBox")
+        inputBar.Size = UDim2.new(0.9, 0, 0, 32)
+        inputBar.Position = UDim2.new(0.05, 0, 0, 45)
+        inputBar.PlaceholderText = "Enter Audio ID (e.g. 1837879082)"
+        inputBar.Text = ""
+        inputBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        inputBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+        inputBar.Font = Enum.Font.SourceSans
+        inputBar.TextSize = 12
+        inputBar.Parent = mainFrame
+
+        local playBtn = Instance.new("TextButton")
+        playBtn.Size = UDim2.new(0.42, 0, 0, 32)
+        playBtn.Position = UDim2.new(0.05, 0, 0, 85)
+        playBtn.Text = "Play"
+        playBtn.BackgroundColor3 = Color3.fromRGB(204, 0, 0)
+        playBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        playBtn.Font = Enum.Font.SourceSansBold
+        playBtn.Parent = mainFrame
+
+        local stopBtn = Instance.new("TextButton")
+        stopBtn.Size = UDim2.new(0.42, 0, 0, 32)
+        stopBtn.Position = UDim2.new(0.53, 0, 0, 85)
+        stopBtn.Text = "Stop"
+        stopBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        stopBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        stopBtn.Font = Enum.Font.SourceSansBold
+        stopBtn.Parent = mainFrame
+
+        local chatBtn = Instance.new("TextButton")
+        chatBtn.Size = UDim2.new(0.9, 0, 0, 32)
+        chatBtn.Position = UDim2.new(0.05, 0, 0, 125)
+        chatBtn.Text = "Open Custom Chat"
+        chatBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+        chatBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        chatBtn.Font = Enum.Font.SourceSansBold
+        chatBtn.Parent = mainFrame
+
+        local statusLabel = Instance.new("TextLabel")
+        statusLabel.Size = UDim2.new(0.9, 0, 0, 25)
+        statusLabel.Position = UDim2.new(0.05, 0, 0, 190)
+        statusLabel.Text = "Status: Ready"
+        statusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+        statusLabel.BackgroundTransparency = 1
+        statusLabel.TextSize = 11
+        statusLabel.Parent = mainFrame
+
+        playBtn.MouseButton1Click:Connect(function()
+            local id = inputBar.Text:match("%d+")
+            if id then
+                sound:Stop()
+                sound.SoundId = "rbxassetid://" .. id
+                sound:Play()
+                statusLabel.Text = "Playing ID: " .. id
+                statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+            else
+                statusLabel.Text = "Error: Invalid Audio ID!"
+                statusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+            end
+        end)
+
+        stopBtn.MouseButton1Click:Connect(function()
+            sound:Stop()
+            statusLabel.Text = "Stopped."
+            statusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        end)
+
+        chatBtn.MouseButton1Click:Connect(function()
+            statusLabel.Text = "Loading Chat Script..."
+            statusLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
+            
+            task.spawn(function()
+                local success, err = pcall(function()
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/halilibrahimseviml1/ChatNoAgeVerification/refs/heads/main/NoAgeVerification"))()
+                end)
+                
+                if success then
+                    statusLabel.Text = "Chat Script Loaded!"
+                    statusLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+                else
+                    statusLabel.Text = "Error loading Chat Script!"
+                    statusLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
+                end
+            end)
+        end)
+    else
+        KeyBox.Text = "Wrong Key!"
+        task.wait(1)
+        KeyBox.Text = ""
+    end
 end)
